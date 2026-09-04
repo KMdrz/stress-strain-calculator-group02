@@ -2,14 +2,14 @@
 
 from typing import Dict, Optional
 
-from material import (
+from .material import (
     Material,
     Metal,
     Plastic,
     Composite
 )
 
-from properties import MaterialProperties
+from .properties import MaterialProperties
 
 
 def get_materials_database() -> Dict[str, Material]:

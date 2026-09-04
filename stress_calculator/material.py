@@ -1,6 +1,6 @@
 # material.py
 
-from properties import MaterialProperties
+from .properties import MaterialProperties
 
 
 class Material:

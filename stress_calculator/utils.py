@@ -6,8 +6,8 @@ import random
 from datetime import datetime
 from pathlib import Path
 
-from tests import StressStrainTest, TestCollection
-from material import Material
+from .test import StressStrainTest, TestCollection
+from .material import Material
 
 
 DATA_FOLDER = Path("data")

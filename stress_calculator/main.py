@@ -1,26 +1,26 @@
 # main.py
 
-from database import (
+from .database import (
     get_materials_database,
     get_material,
     add_material
 )
 
-from material import (
+from .material import (
     Material,
     Metal,
     Plastic,
     Composite
 )
 
-from properties import MaterialProperties
+from .properties import MaterialProperties
 
-from tests import (
+from .test import (
     StressStrainTest,
     TestCollection
 )
 
-from utils import (
+from .utils import (
     save_tests_to_json,
     load_tests_from_json,
     export_tests_to_csv,
@@ -37,7 +37,7 @@ def prompt_positive_float(prompt_text: str) -> float:
 
             if value <= 0:
                 print(
-                    "  [Error]: Value must be greater than zero."
+                    "[Error]: Value must be greater than zero."
                 )
                 continue
 
@@ -45,7 +45,7 @@ def prompt_positive_float(prompt_text: str) -> float:
 
         except ValueError:
             print(
-                "  [Error]: Invalid numerical input."
+                "[Error]: Invalid numerical input."
             )
 
 
@@ -58,7 +58,7 @@ def prompt_non_zero_float(prompt_text: str) -> float:
 
             if value == 0:
                 print(
-                    "  [Error]: Value cannot be zero."
+                    "[Error]: Value cannot be zero."
                 )
                 continue
 
@@ -66,7 +66,7 @@ def prompt_non_zero_float(prompt_text: str) -> float:
 
         except ValueError:
             print(
-                "  [Error]: Invalid numerical input."
+                "[Error]: Invalid numerical input."
             )
 
 
@@ -200,7 +200,7 @@ def run_manual_test(
         display_test_result(test)
 
     except ValueError as error:
-        print(f"  [Error]: {error}")
+        print(f"[Error]: {error}")
 
 
 def display_test_result(
@@ -212,8 +212,8 @@ def display_test_result(
     print(f"Material: {test.material.name}")
     print(f"Timestamp: {test.timestamp}")
     print(f"Loading Type: {test.loading_type}")
-    print(f"Stress: {test.stress_mpa:.2f} MPa")
-    print(f"Strain: {test.strain:.6f}")
+    print(f"Stress = {test.stress_pa:,.0f} Pa")
+    print(f"Strain: {test.strain:.4f}")
     print(
         f"Young's Modulus: "
         f"{test.calculated_modulus_gpa:.2f} GPa"
@@ -311,7 +311,7 @@ def main() -> None:
 
                 if not selected_material:
                     print(
-                        f"  [Error]: Material "
+                        f"[Error]: Material "
                         f"'{mat_input}' not found."
                     )
                     continue
@@ -372,7 +372,7 @@ def main() -> None:
         else:
 
             print(
-                "  [Error]: Invalid choice. "
+                "[Error]: Invalid choice. "
                 "Please enter 1-7."
             )
 

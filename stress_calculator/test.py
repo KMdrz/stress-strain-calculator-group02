@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import List, Set, Iterator
 
-from material import Material
+from .material import Material
 from datetime import datetime
 
 
