@@ -1,37 +1,53 @@
-def display_materials_menu(database: Dict[str, Material]) -> None:
-    print("\nAvailable Materials:")
-    for material in database.values():
-        print(f"- {material}")
-    print("- Custom")
+def main() -> None:
+    database = get_materials_database()
+    collection = TestCollection()
+
+    print("=== Stress and Strain Analysis System (Task 5: OOP) ===")
+
+    while True:
+        display_materials_menu(database)
+        mat_input = input("\nEnter material name or 'Custom': ").strip()
+
+        if mat_input.lower() == "custom":
+            selected_material = handle_custom_material_creation()
+            database[selected_material.name] = selected_material
+        else:
+            selected_material = get_material(mat_input, database)
+            if not selected_material:
+                print(f"  [Error]: Material '{mat_input}' not found in database.")
+                continue
+
+        force = prompt_non_zero_float("Enter applied force (N): ")
+        area = prompt_positive_float("Enter cross-sectional area (m²): ")
+        original_length = prompt_positive_float("Enter original length (m): ")
+        change_in_length = prompt_non_zero_float("Enter change in length (m): ")
+
+        try:
+            test = StressStrainTest(
+                material=selected_material,
+                force=force,
+                area=area,
+                original_length=original_length,
+                change_in_length=change_in_length
+            )
+            collection.add_test(test)
+
+            print("\n=== Test Result ===")
+            print(test)
+            print(f"Loading Type: {test.loading_type}")
+            print(f"Safety Factor: {test.safety_factor:.2f}")
+            print(f"Safety Status: {test.safety_status}")
+            print(f"Will Material Fail? {'Yes' if test.will_fail() else 'No'}")
+
+        except ValueError as err:
+            print(f"  [Error]: {err}")
+
+        again = input("\nPerform another calculation? (y/n): ").strip().lower()
+        if again != "y":
+            break
+
+    collection.display_summary()
 
 
-def handle_custom_material_creation() -> Material:
-    name = input("Enter custom material name: ").strip() or "Custom Material"
-
-    print("\nSelect Material Category:")
-    print("1. Metal")
-    print("2. Plastic")
-    print("3. Composite")
-    print("4. General Material")
-
-    cat_choice = input("Choice (1-4): ")
-
-    density = prompt_positive_float("Enter density (kg/m³): ")
-    yield_strength = prompt_positive_float("Enter yield strength (MPa): ")
-    youngs_modulus = prompt_positive_float("Enter Young's modulus (GPa): ")
-
-    properties = MaterialProperties(density, yield_strength, youngs_modulus)
-
-    if cat_choice == "1":
-        ductility = prompt_positive_float("Enter ductility (% elongation): ")
-        return Metal(name, properties)
-
-    elif cat_choice == "2":
-        is_thermo = input("Is it thermoplastic? (y/n): ").strip().lower() == "y"
-        return Plastic(name, properties)
-
-    elif cat_choice == "3":
-        fiber = input("Enter fiber type: ").strip() or "Fiberglass"
-        return Composite(name, properties)
-
-    return Material(name, properties)
+if __name__ == "__main__":
+    main()
