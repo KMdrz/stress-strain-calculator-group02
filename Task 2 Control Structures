@@ -25,7 +25,7 @@ def get_force(prompt):
             value = float(input(prompt))
 
             if value == 0:
-                print("Error: Force cannot be zero. Please try again.")3123
+                print("Error: Force cannot be zero. Please try again.")
             else:
                 return value
 
@@ -33,10 +33,51 @@ def get_force(prompt):
             print("Error: Please enter a valid numerical value.")
 
 
+def select_material():
+    """Allows the user to select a material."""
+
+    while True:
+        print("\n=== MATERIAL SELECTION ===")
+        print("1. Steel")
+        print("2. Aluminum")
+        print("3. Titanium")
+        print("4. Custom Material")
+
+        choice = input("Select a material: ")
+
+        if choice == "1":
+            return "Steel", 95, 69
+
+        elif choice == "2":
+            return "Aluminum", 250, 200
+
+        elif choice == "3":
+            return "Titanium", 880, 114
+
+        elif choice == "4":
+            name = input("Enter custom material name: ")
+
+            yield_strength = get_positive_float(
+                "Enter yield strength (MPa): "
+            )
+
+            youngs_modulus = get_positive_float(
+                "Enter Young's modulus (GPa): "
+            )
+
+            return name, yield_strength, youngs_modulus
+
+        else:
+            print("Error: Invalid choice. Please select 1-4.")
+
+
 def main():
     """Main function for the stress and strain calculator."""
 
     print("=== Stress and Strain Calculator ===\n")
+
+    # Material selection
+    material, yield_strength, youngs_modulus = select_material()
 
     force = get_force("Enter applied force: ")
     area = get_positive_float("Enter cross-sectional area: ")
@@ -56,12 +97,19 @@ def main():
 
     # Print out the results
     print("\n=== RESULTS ===\n")
+
+    print(f"Material: {material}")
+    print(f"Yield Strength: {yield_strength:.2f} MPa")
+    print(f"Young's Modulus: {youngs_modulus:.2f} GPa")
+
+    print()
     print(f"Stress: {stress:.2f} Pa")
-    print(f"Strain: {strain:.2f}")
+    print(f"Strain: {strain:.6f}")
     print(f"Stress (MPa): {stress_mpa:.2f}")
     print(f"Loading: {loading}")
+
     print("\n=== Analysis Complete ===")
 
 
-if name == "main":
+if __name__ == "__main__":
     main()
