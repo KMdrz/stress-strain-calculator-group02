@@ -1,0 +1,67 @@
+# Task 2 Control Structures
+
+def get_positive_float(prompt):
+    """Gets a valid positive number from the user."""
+
+    while True:
+        try:
+            value = float(input(prompt))
+
+            if value < 0:
+                print("Error: Value cannot be negative. Please try again.")
+            elif value == 0:
+                print("Error: Value must be greater than zero. Please try again.")
+            else:
+                return value
+
+        except ValueError:
+            print("Error: Please enter a valid numerical value.")
+
+def get_force(prompt):
+    """Gets a valid force value, including negative values for compression."""
+
+    while True:
+        try:
+            value = float(input(prompt))
+
+            if value == 0:
+                print("Error: Force cannot be zero. Please try again.")3123
+            else:
+                return value
+
+        except ValueError:
+            print("Error: Please enter a valid numerical value.")
+
+
+def main():
+    """Main function for the stress and strain calculator."""
+
+    print("=== Stress and Strain Calculator ===\n")
+
+    force = get_force("Enter applied force: ")
+    area = get_positive_float("Enter cross-sectional area: ")
+    original_length = get_positive_float("Enter original length: ")
+    change_in_length = get_positive_float("Enter change in length: ")
+
+    # Formulas
+    stress = force / area
+    strain = change_in_length / original_length
+
+    stress_mpa = stress / 1000000
+
+    if stress_mpa > 0:
+        loading = "Tension"
+    else:
+        loading = "Compression"
+
+    # Print out the results
+    print("\n=== RESULTS ===\n")
+    print(f"Stress: {stress:.2f} Pa")
+    print(f"Strain: {strain:.2f}")
+    print(f"Stress (MPa): {stress_mpa:.2f}")
+    print(f"Loading: {loading}")
+    print("\n=== Analysis Complete ===")
+
+
+if name == "main":
+    main()
