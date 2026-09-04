@@ -1,48 +1,24 @@
-class TestCollection:
-    def __init__(self):
-        self._history: List[StressStrainTest] = []
-        self._unique_materials_used: Set[str] = set()
+def get_materials_database() -> Dict[str, Material]:
+    steel = MaterialProperties(7850, 250.0, 200.0)
+    aluminum = MaterialProperties(2700, 95.0, 69.0)
+    titanium = MaterialProperties(4500, 880.0, 114.0)
+    polycarbonate_props = MaterialProperties(1200, 62.0, 2.3)
+    carbon_fiber_props = MaterialProperties(1600, 600.0, 150.0)
+
+    return {
+        "Steel": Metal("Steel", steel, 15.0),
+        "Aluminum": Metal("Aluminum", aluminum, 25.0),
+        "Titanium": Metal("Titanium", titanium, 10.0),
+        "Polycarbonate": Plastic("Polycarbonate", polycarbonate_props),
+        "Carbon Fiber": Composite("Carbon Fiber", carbon_fiber_props, "3K Carbon")
+    }
 
 
-    def add_test(self, test: StressStrainTest) -> None:
-        if test is None:
-            return
-        self._history.append(test)
+def get_material(name: str, database: Dict[str, Material]) -> Optional[Material]:
+    db_lookup = {key.lower(): key for key in database}
+    cleaned_name = name.strip().lower()
 
+    if cleaned_name in db_lookup:
+        return database[db_lookup[cleaned_name]]
 
-    @property
-    def history(self) -> List[StressStrainTest]:
-        return list(self._history)
-
-
-    @property
-    def unique_materials_used(self) -> Set[str]:
-        return set(self._unique_materials_used)
-
-    def __len__(self) -> int:
-        return len(self._history)
-
-    def __iter__(self) -> Iterator[StressStrainTest]:
-        return iter(self._history)
-
-    def __bool__(self) -> bool:
-        return bool(self._history)
-
-    def display_summary(self) -> None:
-        print("\n=== Test Session Summary ===")
-        print(f"Total tests: {len(self)}")
-        print(f"Materials tested: {len(self._unique_materials_used)}")
-
-        if self._history:
-            print("\n--- Detailed Test History ---")
-            for test in self._history:
-                print(
-                    f"- {test.material.name}: "
-                    f"Stress={test.stress_mpa:.2f} MPa, "
-                    f"Strain={test.strain:.6f}, "
-                    f"Young's Modulus={test.calculated_modulus_gpa:.2f} GPa, "
-                    f"Safety Factor={test.safety_factor:.2f}, "
-                    f"Status={test.safety_status}"
-                )
-        else:
-            print("No tests performed in this session.")
+    return None
