@@ -1,47 +1,58 @@
-#Task 4 Functions and Parimeters
+#Task 4 Functions and Parameters
 
-def display_material_menu(database):
-    """Displays the available materials."""
-    print("\nAvailable Materials:")
+def setup_program():
+    """Sets up the database and calculation history."""
+    database = get_materials_database()
+    history = []
+    unique_materials = set()
 
-    for material in database:
-        print(f"- {material}")
-
-
-def display_calculation_results(record):
-    """Displays the results of a calculation."""
-    print("\n===== CALCULATION RESULTS =====")
-    print(f"Material: {record['material']}")
-    print(f"Force: {record['force']} N")
-    print(f"Area: {record['area']} m²")
-    print(f"Original Length: {record['original_length']} m")
-    print(f"Change in Length: {record['change_in_length']} m")
-    print(f"Stress: {record['stress_mpa']} MPa")
-    print(f"Strain: {record['strain']}")
-    print(f"Young's Modulus: {record['calc_modulus_gpa']} GPa")
-    print(f"Factor of Safety: {record['safety_factor']}")
-    print(f"Safety Status: {record['safety_status']}")
+    return database, history, unique_materials
 
 
-def display_safety_analysis(stress, yield_strength, safety_factor):
-    """Displays the safety analysis."""
-    print("\n===== SAFETY ANALYSIS =====")
-    print(f"Applied Stress: {stress} MPa")
-    print(f"Yield Strength: {yield_strength} MPa")
-    print(f"Factor of Safety: {safety_factor}")
+def handle_material(database):
+    """Gets the material selected by the user."""
+    display_material_menu(database)
+    material = input("\nEnter material name or 'Custom': ")
+
+    if material.lower() == "custom":
+        material = input("Enter custom material name: ")
+        yield_strength = get_validated_input("Enter yield strength (MPa): ", validate_positive_number)
+        youngs_modulus = get_validated_input("Enter Young's modulus (GPa): ", validate_positive_number)
+        database[material] = {"yield_strength": yield_strength, "youngs_modulus": youngs_modulus}
+
+    return material
 
 
-def display_session_summary(history, unique_materials):
-    """Displays a summary of the calculation session."""
-    print("\n===== SESSION SUMMARY =====")
-    print(f"Total Calculations: {len(history)}")
-    print(f"Unique Materials: {len(unique_materials)}")
+def run_calculation(material, database, history, unique_materials):
+    """Runs one complete calculation."""
+    inputs = get_test_inputs()
+    results = perform_calculation(material, inputs, database)
+    record = create_calculation_record(material, inputs, results)
 
-    if history:
-        highest_stress = max(history, key=lambda x: x["stress_mpa"])
-        lowest_safety = min(history, key=lambda x: x["safety_factor"])
-        average_strain = sum(record["strain"] for record in history) / len(history)
+    add_to_history(history, record)
+    unique_materials.add(material)
+    display_calculation_results(record)
 
-        print(f"Highest Stress: {highest_stress['stress_mpa']} MPa")
-        print(f"Lowest Factor of Safety: {lowest_safety['safety_factor']}")
-        print(f"Average Strain: {average_strain}"),
+
+def main():
+    """Runs the stress and strain calculator."""
+    database, history, unique_materials = setup_program()
+
+    while True:
+        material = handle_material(database)
+        try:
+            get_material_properties(material, database)
+        except KeyError:
+            print("  [Error] Material not found.")
+            continue
+
+        run_calculation(material, database, history, unique_materials)
+
+        again = input("\nPerform another calculation? (y/n): ")
+        if again.lower() != "y":
+            break
+
+    display_session_summary(history, unique_materials)
+
+if __name__ == "__main__":
+    main()
