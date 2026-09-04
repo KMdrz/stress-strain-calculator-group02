@@ -3,8 +3,7 @@
 def main():
     """Main function for the stress and strain calculator."""
 
-    print("=== Stress and Strain Calculator ===")
-    print()
+    print("=== Stress and Strain Calculator ===\n")
     force = float(input("Enter applied force: "))
     area = float(input("Enter cross-sectional area: "))
     original_length = float(input("Enter original length: "))
@@ -15,12 +14,10 @@ def main():
     strain = change_in_length / original_length
 
     #Print out the results with the proper format
-    print()
-    print("=== RESULTS ===")
+    print("\n=== RESULTS ===\n")
     print(f"Stress: {stress:.2f} Pa")
     print(f"Strain: {strain:.6f}")
-    print()
-    print("=== Analysis Complete ===")
+    print("\n=== Analysis Complete ===")
 
 if __name__ == "__main__":
     main()
