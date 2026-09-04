@@ -5,16 +5,10 @@ def main():
 
     print("=== Stress and Strain Calculator ===")
     print()
-    force = input("Enter applied force: ")
-    area = input("Enter cross-sectional area: ")
-    original_length = input("Enter original length: ")
-    change_in_length = input("Enter change in length: ")
-
-    #Conversion of inputs to float
-    force = float(force)
-    area = float(area)
-    original_length = float(original_length)
-    change_in_length = float(change_in_length)
+    force = float(input("Enter applied force: "))
+    area = float(input("Enter cross-sectional area: "))
+    original_length = float(input("Enter original length: "))
+    change_in_length = float(input("Enter change in length: "))
 
     #Formulas for Stress and Strain
     stress = force / area
